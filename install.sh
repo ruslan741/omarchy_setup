@@ -87,9 +87,9 @@ install_dir "$SCRIPT_DIR/walker"      "$HOME_DIR/.config/walker"
 install_dir "$SCRIPT_DIR/waybar"      "$HOME_DIR/.config/waybar"
 
 echo -e "${CYAN}--- oh-my-zsh: plugins / themes / oh-my-zsh.sh ---${NC}"
-install_dir  "$SCRIPT_DIR/.oh-my-zsh/plugins"     "$HOME_DIR/.oh-my-zsh/plugins"
-install_dir  "$SCRIPT_DIR/.oh-my-zsh/themes"      "$HOME_DIR/.oh-my-zsh/themes"
-install_file "$SCRIPT_DIR/.oh-my-zsh/oh-my-zsh.sh" "$HOME_DIR/.oh-my-zsh/oh-my-zsh.sh"
+install_dir  "$SCRIPT_DIR/oh-my-zsh/plugins"      "$HOME_DIR/.oh-my-zsh/plugins"
+install_dir  "$SCRIPT_DIR/oh-my-zsh/themes"       "$HOME_DIR/.oh-my-zsh/themes"
+install_file "$SCRIPT_DIR/oh-my-zsh/oh-my-zsh.sh" "$HOME_DIR/.oh-my-zsh/oh-my-zsh.sh"
 
 echo -e "${CYAN}--- ~/.zshrc ---${NC}"
 install_file "$SCRIPT_DIR/.zshrc"     "$HOME_DIR/.zshrc"
