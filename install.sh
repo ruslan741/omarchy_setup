@@ -13,9 +13,9 @@ NC='\033[0m'
 log()  { echo -e "${GREEN}==>${NC} $*"; }
 warn() { echo -e "${YELLOW}!! ${NC}$*"; }
 
-# install_dir <src> <dst> [--no-git] : copy files of a dir into destination, backing up existing
+# install_dir <src> <dst> : copy files of a dir into destination, backing up existing
 install_dir() {
-    local src="$1" dst="$2" extra="${3:-}"
+    local src="$1" dst="$2"
     if [ ! -d "$src" ]; then
         warn "Пропускаю: исходный каталог не найден: $src"
         return
@@ -27,11 +27,7 @@ install_dir() {
         cp -a "$dst" "$bak"
     fi
     log "Установка: $src/ -> $dst/"
-    if [ "$extra" = "--no-git" ]; then
-        rsync -a --exclude='.git/' "$src/" "$dst/"
-    else
-        rsync -a "$src/" "$dst/"
-    fi
+    rsync -a "$src/" "$dst/"
 }
 
 # install_file <src> <dst> : copy a single file, backing up existing
@@ -50,9 +46,38 @@ install_file() {
     cp -a "$src" "$dst"
 }
 
+install_pkg() {
+    local bin="$1" pkg="$2" helper="${3:-pacman}"
+    if command -v "$bin" >/dev/null 2>&1; then
+        warn "$pkg уже установлен"
+        return
+    fi
+    if [ "$helper" = "pacman" ]; then
+        log "Установка пакета: $pkg"
+        sudo pacman -S --needed --noconfirm "$pkg"
+    else
+        log "Установка пакета: $pkg (AUR)"
+        yay -S --needed --noconfirm "$pkg"
+    fi
+}
+
 echo -e "${CYAN}=== Omarchy setup restore ===${NC}"
 
-# --- Каталоги конфигов в ~/.config ---
+# --- 1. Пакеты (сначала) ---
+echo -e "${CYAN}--- Пакеты ---${NC}"
+install_pkg cava cava pacman
+install_pkg durdraw durdraw yay
+install_pkg curl curl pacman
+
+if [ -d "$HOME_DIR/.oh-my-zsh" ]; then
+    warn "oh-my-zsh уже установлен (~/.oh-my-zsh существует), пропускаю установку"
+else
+    log "Установка oh-my-zsh"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+fi
+
+# --- 2. Файлы (потом) ---
+echo -e "${CYAN}--- Каталоги конфигов в ~/.config ---${NC}"
 install_dir "$SCRIPT_DIR/aether"      "$HOME_DIR/.config/aether"
 install_dir "$SCRIPT_DIR/hypr"        "$HOME_DIR/.config/hypr"
 install_dir "$SCRIPT_DIR/nvim"        "$HOME_DIR/.config/nvim"
@@ -61,27 +86,13 @@ install_dir "$SCRIPT_DIR/swayosd"     "$HOME_DIR/.config/swayosd"
 install_dir "$SCRIPT_DIR/walker"      "$HOME_DIR/.config/walker"
 install_dir "$SCRIPT_DIR/waybar"      "$HOME_DIR/.config/waybar"
 
-# --- oh-my-zsh (без вложенной git-истории) ---
-install_dir "$SCRIPT_DIR/.oh-my-zsh"  "$HOME_DIR/.oh-my-zsh" --no-git
+echo -e "${CYAN}--- oh-my-zsh: plugins / themes / oh-my-zsh.sh ---${NC}"
+install_dir  "$SCRIPT_DIR/.oh-my-zsh/plugins"     "$HOME_DIR/.oh-my-zsh/plugins"
+install_dir  "$SCRIPT_DIR/.oh-my-zsh/themes"      "$HOME_DIR/.oh-my-zsh/themes"
+install_file "$SCRIPT_DIR/.oh-my-zsh/oh-my-zsh.sh" "$HOME_DIR/.oh-my-zsh/oh-my-zsh.sh"
 
-# --- ~/.zshrc ---
+echo -e "${CYAN}--- ~/.zshrc ---${NC}"
 install_file "$SCRIPT_DIR/.zshrc"     "$HOME_DIR/.zshrc"
-
-# --- Пакеты ---
-echo
-if ! command -v cava >/dev/null 2>&1; then
-    log "Установка пакета: cava"
-    sudo pacman -S --needed --noconfirm cava
-else
-    warn "cava уже установлен ($(pacman -Q cava))"
-fi
-
-if ! command -v durdraw >/dev/null 2>&1; then
-    log "Установка пакета: durdraw (AUR)"
-    yay -S --needed --noconfirm durdraw
-else
-    warn "durdraw уже установлен"
-fi
 
 echo
 echo -e "${GREEN}Готово. Если нужно применить изменения:${NC}"
