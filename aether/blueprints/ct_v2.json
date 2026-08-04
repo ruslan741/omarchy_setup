@@ -1,0 +1,46 @@
+{
+  "name": "ct_v2",
+  "palette": {
+    "colors": [
+      "#000002",
+      "#f90020",
+      "#3dff05",
+      "#eaff0d",
+      "#ff78ff",
+      "#fd02fb",
+      "#00d3ff",
+      "#8667b7",
+      "#525978",
+      "#ff4d63",
+      "#1e8f00",
+      "#879400",
+      "#f99ef9",
+      "#940593",
+      "#008799",
+      "#fcfcfc"
+    ],
+    "wallpaper": "/home/ruslan/Pictures/screenshot-2026-04-30_00-24-53.png",
+    "extendedColors": {
+      "accent": "#ff78ff",
+      "cursor": "#8667b7",
+      "selection_background": "#8667b7",
+      "selection_foreground": "#000002"
+    }
+  },
+  "adjustments": {
+    "blackPoint": 0,
+    "brightness": 0,
+    "contrast": 0,
+    "gamma": 1,
+    "highlights": 0,
+    "hueShift": 0,
+    "saturation": 15,
+    "shadows": 0,
+    "temperature": 0,
+    "tint": 0,
+    "vibrance": 0,
+    "whitePoint": 0
+  },
+  "settings": {},
+  "timestamp": 1781558766017
+}
