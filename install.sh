@@ -10,7 +10,7 @@ YELLOW='\033[1;33m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-log()  { echo -e "${GREEN}==>${NC} $*"; }
+log() { echo -e "${GREEN}==>${NC} $*"; }
 warn() { echo -e "${YELLOW}!! ${NC}$*"; }
 
 # install_dir <src> <dst> : copy files of a dir into destination, backing up existing
@@ -54,7 +54,7 @@ install_pkg() {
     fi
     if [ "$helper" = "pacman" ]; then
         log "Установка пакета: $pkg"
-        sudo pacman -S --needed --noconfirm "$pkg"
+        sudo pacman -Sy --needed --noconfirm "$pkg"
     else
         log "Установка пакета: $pkg (AUR)"
         yay -S --needed --noconfirm "$pkg"
@@ -65,6 +65,7 @@ echo -e "${CYAN}=== Omarchy setup restore ===${NC}"
 
 # --- 1. Пакеты (сначала) ---
 echo -e "${CYAN}--- Пакеты ---${NC}"
+install_pkg zsh zsh pacman
 install_pkg cava cava pacman
 install_pkg durdraw durdraw yay
 install_pkg curl curl pacman
@@ -78,21 +79,21 @@ fi
 
 # --- 2. Файлы (потом) ---
 echo -e "${CYAN}--- Каталоги конфигов в ~/.config ---${NC}"
-install_dir "$SCRIPT_DIR/aether"      "$HOME_DIR/.config/aether"
-install_dir "$SCRIPT_DIR/hypr"        "$HOME_DIR/.config/hypr"
-install_dir "$SCRIPT_DIR/nvim"        "$HOME_DIR/.config/nvim"
-install_dir "$SCRIPT_DIR/omarchy"     "$HOME_DIR/.config/omarchy"
-install_dir "$SCRIPT_DIR/swayosd"     "$HOME_DIR/.config/swayosd"
-install_dir "$SCRIPT_DIR/walker"      "$HOME_DIR/.config/walker"
-install_dir "$SCRIPT_DIR/waybar"      "$HOME_DIR/.config/waybar"
+install_dir "$SCRIPT_DIR/aether" "$HOME_DIR/.config/aether"
+install_dir "$SCRIPT_DIR/hypr" "$HOME_DIR/.config/hypr"
+install_dir "$SCRIPT_DIR/nvim" "$HOME_DIR/.config/nvim"
+install_dir "$SCRIPT_DIR/omarchy" "$HOME_DIR/.config/omarchy"
+install_dir "$SCRIPT_DIR/swayosd" "$HOME_DIR/.config/swayosd"
+install_dir "$SCRIPT_DIR/walker" "$HOME_DIR/.config/walker"
+install_dir "$SCRIPT_DIR/waybar" "$HOME_DIR/.config/waybar"
 
 echo -e "${CYAN}--- oh-my-zsh: plugins / themes / oh-my-zsh.sh ---${NC}"
-install_dir  "$SCRIPT_DIR/oh-my-zsh/plugins"      "$HOME_DIR/.oh-my-zsh/plugins"
-install_dir  "$SCRIPT_DIR/oh-my-zsh/themes"       "$HOME_DIR/.oh-my-zsh/themes"
+install_dir "$SCRIPT_DIR/oh-my-zsh/plugins" "$HOME_DIR/.oh-my-zsh/plugins"
+install_dir "$SCRIPT_DIR/oh-my-zsh/themes" "$HOME_DIR/.oh-my-zsh/themes"
 install_file "$SCRIPT_DIR/oh-my-zsh/oh-my-zsh.sh" "$HOME_DIR/.oh-my-zsh/oh-my-zsh.sh"
 
 echo -e "${CYAN}--- ~/.zshrc ---${NC}"
-install_file "$SCRIPT_DIR/.zshrc"     "$HOME_DIR/.zshrc"
+install_file "$SCRIPT_DIR/.zshrc" "$HOME_DIR/.zshrc"
 
 echo
 echo -e "${GREEN}Готово. Если нужно применить изменения:${NC}"
